@@ -41,12 +41,12 @@ window.onload = () => {
    
     socket.on('connection_user', (IDSocket) => {
         console.log('user connected')
-        gestionListeUtilisateurConnecte(IDSocket, "connection");
+      //  gestionListeUtilisateurConnecte(IDSocket, "connection");
     } );
 
     socket.on('disconnect_user', (IDSocket) => {
         console.log('user deconnected')
-        gestionListeUtilisateurConnecte(IDSocket, "deconnection");
+       // gestionListeUtilisateurConnecte(IDSocket, "deconnection");
     } );
 
 

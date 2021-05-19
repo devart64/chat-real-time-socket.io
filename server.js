@@ -14,6 +14,25 @@ const http = require("http").createServer(app);
 // on instancie socket.io
 const io = require("socket.io")(http);
 
+// on charge sequelize
+const Sequelize = require("sequelize");
+
+// on fabrique le lien de la base de données
+const dbPath = path.resolve(__dirname, "chat.sqlite");
+// on se connecte à la base
+const sequelize = new Sequelize("database", "username", "password", {
+    host: "localhost",
+    dialect: "sqlite",
+    logging: false,
+    storage: dbPath
+});
+
+// on charge le model "Chat"
+const Chat = require('./Models/Chat')(sequelize, Sequelize.DataTypes);
+
+// on effectue le chargement "réél"
+Chat.sync();
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
