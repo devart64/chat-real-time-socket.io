@@ -1,11 +1,14 @@
 // on se oncnecte
 const socket = io();
 
+// on gère l'arrivée d'un nouvel utilisateur
+socket.on("connect", () => {
+    // on emet un message d'entrée dans une salle
+    socket.emit("enter_room", "general")
+})
 
 
 window.onload = () => {
-
-    
 
     // on écoute l'événement submit
     document.querySelector("form").addEventListener("submit", (e) => {

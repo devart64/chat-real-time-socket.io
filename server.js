@@ -33,6 +33,9 @@ const Chat = require('./Models/Chat')(sequelize, Sequelize.DataTypes);
 // on effectue le chargement "réél"
 Chat.sync();
 
+
+//@TODO https://www.youtube.com/watch?v=x7jRbDpO1ow&list=PLBq3aRiVuwyx7FjO-Cwfbir-CMaZGyCDE&index=33 40 minutes
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
@@ -42,13 +45,20 @@ io.on('connection', (socket) => {
     console.log(' un utilisateur s\est connecté : id socket => '+socket.id)
           
         
-        socket.broadcast.emit("connection_user", socket.id);
+    
 
     // on écoute la déconnexion
     socket.on('disconnect', (socket) => {
         console.log(' un utilisateur s\est déconnecté ');
         io.emit("disconnect_user", socket.id);
     });
+
+    // on écoute l'entrée dans une salle
+    socket.on("enter_room", (room) => {
+        // on entre dans la salle demande
+        socket.join(room);
+        console.log(socket.rooms)
+    })
 
     // on gère le chat
     socket.on('chat_message', (msg) => {
