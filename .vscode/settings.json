@@ -1,0 +1,13 @@
+{
+    "sqltools.queryParams.enableReplace": true,
+    "sqltools.tableTreeItemsExpanded": true,
+    "sqltools.connectionExplorer.groupConnected": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:nodejs}/chat.sqlite",
+            "name": "username"
+        }
+    ]
+}
