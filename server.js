@@ -55,15 +55,44 @@ io.on('connection', (socket) => {
 
     // on écoute l'entrée dans une salle
     socket.on("enter_room", (room) => {
-        // on entre dans la salle demande
+        // on entre dans la salle demandée
         socket.join(room);
         console.log(socket.rooms)
+
+        // on envoi tous les message du salon
+        Chat.findAll({
+            attributes: ['id', 'name', 'message', 'room', 'createdAt'],
+            where: {
+                room: room
+            }
+        }).then(list => {
+            socket.emit('init_messages', {messages: JSON.stringify(list)});
+        })
+    });
+
+    //  on écoute les sorties dans les salles
+    socket.on("leave_room", (room) => {
+        socket.leave(room);
+    })
+    // on écoute les message typing
+    socket.on('typing', msg => {
+        socket.to(msg.room).emit('usertyping', msg)
     })
 
     // on gère le chat
     socket.on('chat_message', (msg) => {
-        // on relai le message vers tous les users connectés
-        io.emit("chat_message", msg);
+        // on stock les messages dans la base de données
+        const message = Chat.create({
+            name: msg.name,
+            message: msg.message,
+            room: msg.room,
+            createdAt: msg.date
+        }).then(() => {
+            // le message est stocké, on le relai à tous les utilisateur dans le salon actif
+            io.in(msg.room).emit("received_message", msg);
+        }).catch(e => {
+            console.log(e);
+        });
     });
 });
 
